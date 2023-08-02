@@ -16,7 +16,7 @@ void dataStorage::getData(int32_t relative_alt_data, uint16_t hdg_data, int8_t b
     vel[array_counter] = vel_data;
     rssi[array_counter] = rssi_data;
 
-    if(array_counter == 9){
+    if(array_counter == (ARRAY_SIZE-1)){
         processData();
         array_counter = 0;
     }
@@ -27,7 +27,7 @@ void dataStorage::getData(int32_t relative_alt_data, uint16_t hdg_data, int8_t b
 
 void dataStorage::processData(){
 
-    for(int i = 0 ; i < 10 ; i++){
+    for(int i = 0 ; i < (ARRAY_SIZE-1) ; i++){
         average_relative_alt = average_relative_alt + relative_alt[i];
         average_hdg = average_hdg + hdg[i];
         average_battery_remaining = average_battery_remaining + battery_remaining[i];
