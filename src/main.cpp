@@ -3,7 +3,8 @@
 #include "SSD1306AsciiWire.h"
 #include <mavlink.h>
 #include <EEPROM.h>
-#include "modules/processData/processData.h"
+#include "modules/data_storage/data_storage.h"
+#include "modules/displayData/displayData.h"
 
 #define I2C_ADDRESS 0x3C
 #define RST_PIN -1
@@ -33,7 +34,8 @@ uint8_t flag, eeprom_flag = 0;
 uint32_t time_flag;
 
 //TEST
-dataStorage dataCluster;
+telemetry_data data_storage = {0};
+
 void set_flag();
 void display_wait();
 void display_data();
@@ -59,34 +61,50 @@ void setup() {
 void loop() {
   while(Serial.available()) {
     uint8_t c= Serial.read();
-    if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
-    flag = 0;
-    switch(msg.msgid) {
+    if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)){
+      flag = 0;
+      switch(msg.msgid) {
         case MAVLINK_MSG_ID_HEARTBEAT: {
           break;
         }
         case MAVLINK_MSG_ID_GLOBAL_POSITION_INT: {
           mavlink_global_position_int_t packet;
           mavlink_msg_global_position_int_decode(&msg, &packet);
-          if(packet.hdg == 65535) packet.hdg = 0;
-          //if(lat != packet.lat) { lat = packet.lat; set_flag(); }
-          //if(lon != packet.lon) { lon = packet.lon; set_flag(); }
-          //if(alt != packet.alt) { alt = packet.alt; set_flag(); }
-          if(relative_alt != packet.relative_alt) { relative_alt = packet.relative_alt; set_flag(); }
-          //if(vx != packet.vx) { vx = packet.vx; set_flag(); }
-          //if(vy != packet.vy) { vy = packet.vy; set_flag(); } 
-          //if(vz != packet.vz) { vz = packet.vz; set_flag(); }
-          if(hdg != packet.hdg) { hdg = packet.hdg; set_flag(); }
+          if(packet.hdg == 65535)
+            packet.hdg = 0;
+          if(data_storage.relative_alt_array[data_storage.loop_counter] != packet.relative_alt){
+            data_storage.relative_alt_array[data_storage.loop_counter] = packet.relative_alt; 
+            set_flag(); 
+          }
+          if(data_storage.hdg_array[data_storage.loop_counter] != packet.hdg){
+            data_storage.hdg_array[data_storage.loop_counter] = packet.hdg;
+            set_flag();
+          }
           break;
         }
         case MAVLINK_MSG_ID_SYS_STATUS: {
           __mavlink_sys_status_t packet;
           mavlink_msg_sys_status_decode(&msg, &packet);
-          if(battery_remaining != packet.battery_remaining && packet.battery_remaining >= 0) { battery_remaining = packet.battery_remaining; set_flag(); }
-          if(voltage_battery != packet.voltage_battery && packet.voltage_battery != 65535) { voltage_battery = packet.voltage_battery; set_flag(); }
-          if(current_battery != packet.current_battery) { current_battery = packet.current_battery; set_flag(); }
-          if(cpu_load != packet.load) { cpu_load = packet.load; set_flag(); }
-          if(drop_rate_comm != packet.drop_rate_comm) { drop_rate_comm = packet.drop_rate_comm; set_flag(); }
+          if(data_storage.battery_remaining_array[data_storage.loop_counter] != packet.battery_remaining && packet.battery_remaining >= 0){
+            data_storage.battery_remaining_array[data_storage.loop_counter] = packet.battery_remaining;
+            set_flag();
+          }
+          if(data_storage.voltage_battery_array[data_storage.loop_counter] != packet.voltage_battery && packet.voltage_battery != 65535){
+            data_storage.voltage_battery_array[data_storage.loop_counter] = packet.voltage_battery;
+            set_flag();
+          }
+          if(data_storage.current_battery_array[data_storage.loop_counter] != packet.current_battery){
+            data_storage.current_battery_array[data_storage.loop_counter] = packet.current_battery;
+            set_flag();
+          }
+          if(data_storage.cpu_load_array[data_storage.loop_counter] != packet.load){
+            data_storage.cpu_load_array[data_storage.loop_counter] = packet.load;
+            set_flag();
+          }
+          if(data_storage.drop_rate_comm_array[data_storage.loop_counter] != packet.drop_rate_comm){
+            data_storage.drop_rate_comm_array[data_storage.loop_counter] = packet.drop_rate_comm;
+            set_flag();
+          }
           break;
         }
         case MAVLINK_MSG_ID_ATTITUDE: {
@@ -98,7 +116,10 @@ void loop() {
         case MAVLINK_MSG_ID_RC_CHANNELS_RAW: {
           __mavlink_rc_channels_raw_t packet;
           mavlink_msg_rc_channels_raw_decode(&msg, &packet);
-          if(rssi != packet.rssi) { rssi = packet.rssi; set_flag(); }
+          if(data_storage.rssi_array[data_storage.loop_counter] != packet.rssi){
+            data_storage.rssi_array[data_storage.loop_counter] = packet.rssi;
+            set_flag();
+          }
           break;
         }
         case MAVLINK_MSG_ID_VFR_HUD: {
@@ -107,34 +128,56 @@ void loop() {
         case MAVLINK_MSG_ID_GPS_RAW_INT: {
           __mavlink_gps_raw_int_t packet;
           mavlink_msg_gps_raw_int_decode(&msg, &packet);
-          if(packet.cog == 65535) packet.cog = 0;
-          if(packet.vel == 65535) packet.vel = 0;
-          if(packet.alt == 65535) packet.alt = 0;
-          if(lat != packet.lat) { lat = packet.lat; set_flag(); }
-          if(lon != packet.lon) { lon = packet.lon; set_flag(); }
-          //if(gps_alt != packet.alt) { gps_alt = packet.alt; set_flag(); }
-          if(vel != packet.vel) { vel = packet.vel; set_flag(); }
-          if(cog != packet.cog) { cog = packet.cog; set_flag(); }
-          if(fix_type != packet.fix_type) { fix_type = packet.fix_type; set_flag(); }
-          if(satellites_visible != packet.satellites_visible) { satellites_visible = packet.satellites_visible; set_flag(); }
+          if(packet.cog == 65535)
+            packet.cog = 0;
+          if(packet.vel == 65535)
+            packet.vel = 0;
+          if(packet.alt == 65535)
+            packet.alt = 0;
+          if(lat != packet.lat){
+            lat = packet.lat;
+            set_flag();
+          }
+          if(data_storage.lon_array[data_storage.loop_counter] != packet.lon){
+            data_storage.lon_array[data_storage.loop_counter] = packet.lon;
+            set_flag();
+          }
+          if(data_storage.vel_array[data_storage.loop_counter] != packet.vel){
+            data_storage.vel_array[data_storage.loop_counter] = packet.vel;
+            set_flag();
+          }
+          if(data_storage.cog_array[data_storage.loop_counter] != packet.cog){
+            data_storage.cog_array[data_storage.loop_counter] = packet.cog;
+            set_flag();
+          }
+          if(data_storage.fix_type_array[data_storage.loop_counter] != packet.fix_type){
+            data_storage.fix_type_array[data_storage.loop_counter] = packet.fix_type;
+            set_flag();
+          }
+          if(data_storage.satellites_visible_array[data_storage.loop_counter] != packet.satellites_visible){
+            data_storage.satellites_visible_array[data_storage.loop_counter] = packet.satellites_visible;
+            set_flag();
+          }
           break;
         }
-        default: {
+        default:{
           #ifdef DEBUG
-          Serial.println(msg.msgid); //see unused packet types
+            Serial.println(msg.msgid); //see unused packet types
           #endif
-        break;
+          break;
         }
-    }//switch
-    if(flag == 1) {
-      //TEST
-      dataCluster.getData(relative_alt, hdg, battery_remaining, current_battery, voltage_battery, cpu_load, drop_rate_comm, lat, lon, satellites_visible, fix_type, cog, vel, rssi);
-      display_data();
-    }//print flag
-    else {
-      no_data();
-    }
-   }//if mavlink_parse_char
+      }//switch
+      if(flag == 1) {
+
+        //TEST
+        process_telemetry_data(&data_storage);
+        display_data();
+        
+      }//print flag
+      else {
+        no_data();
+      }
+    }//if mavlink_parse_char
   }//while serial available
   no_data(); //check no serial input data fuction
 }
@@ -176,28 +219,6 @@ void display_data() {
       delay(500);
       digitalWrite(buz, LOW);
       }
-}
-
-void printL(int32_t degE7) {
-  // Extract and print negative sign
-  if (degE7 < 0) {
-    degE7 = -degE7;
-    oled.print( '-' );
-  }
-  // Whole degrees
-  int32_t deg = degE7 / 10000000L;
-  oled.print( deg );
-  oled.print( '.' );
-  // Get fractional degrees
-  degE7 -= deg*10000000L;
-  // Print leading zeroes, if needed
-  int32_t factor = 1000000L;
-  while ((degE7 < factor) && (factor > 1L)){
-    oled.print( '0' );
-    factor /= 10L;
-  }
-  // Print fractional degrees
-  oled.print( degE7 );
 }
 
 void no_data() {
