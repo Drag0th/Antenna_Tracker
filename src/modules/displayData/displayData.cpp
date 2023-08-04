@@ -37,3 +37,14 @@ void display_data(telemetry_data *data){
   oled_display.println((String)"DR: "+data->drop_rate_comm_array[data->loop_counter]/100+(String)"%  "  "ALT: "+data->relative_alt_array[data->loop_counter]/1000+(String)"m");
   oled_display.println(data->current_battery_array[data->loop_counter]/100.0+(String)"A  "+data->voltage_battery_array[data->loop_counter]/1000.0+(String)"V  R:"+data->battery_remaining_array[data->loop_counter]+(String)"%");
 }
+
+void display_average_data(telemetry_data *data){
+  oled_display.clear();
+  printL(data->average_lat); //gps
+  oled_display.print(" ");
+  printL(data->average_lon);
+  oled_display.println();
+  oled_display.println((String)"SATS: "+data->average_satellites_visible+(String)" "+data->average_fix_type+(String)"D "  "RSSI: "+map(data->average_rssi,0,255,0,100)+(String)"%");
+  oled_display.println((String)"DR: "+data->average_drop_rate_comm/100+(String)"%  "  "ALT: "+data->average_relative_alt/1000+(String)"m");
+  oled_display.println(data->average_current_battery/100.0+(String)"A  "+data->average_voltage_battery/1000.0+(String)"V  R:"+data->average_battery_remaining+(String)"%");
+}
