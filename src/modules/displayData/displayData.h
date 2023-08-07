@@ -4,3 +4,4 @@
 
 void printL(int32_t degE7);
 void display_data(telemetry_data *data);
+void display_average_data(telemetry_data *data);

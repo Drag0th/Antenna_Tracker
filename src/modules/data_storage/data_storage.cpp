@@ -1,41 +1,73 @@
 #include "data_storage.h"
-
+#include <cmath>
+//REWORK
 void process_telemetry_data(telemetry_data *data){
-    if(data->loop_counter < 9){
-        for(int i = 0 ; i < (ARRAY_SIZE-1) ; i++){
-            data->average_relative_alt = data->average_relative_alt + data->relative_alt_array[data->loop_counter];
-            data->average_hdg = data->average_hdg + data->hdg_array[data->loop_counter];
-            data->average_battery_remaining = data->average_battery_remaining + data->battery_remaining_array[data->loop_counter];
-            data->average_current_battery = data->average_current_battery + data->current_battery_array[data->loop_counter];
-            data->average_voltage_battery = data->average_voltage_battery + data->voltage_battery_array[data->loop_counter];
-            data->average_cpu_load = data->average_cpu_load + data->cpu_load_array[data->loop_counter];
-            data->average_drop_rate_comm = data->average_drop_rate_comm + data->drop_rate_comm_array[data->loop_counter];
-            data->average_lat = data->average_lat + data->lat_array[data->loop_counter];
-            data->average_lon = data->average_lon + data->lon_array[data->loop_counter];
-            data->average_satellites_visible = data->average_satellites_visible + data->satellites_visible_array[data->loop_counter];
-            data->average_cog = data->average_cog + data->cog_array[data->loop_counter];
-            data->average_vel = data->average_vel + data->vel_array[data->loop_counter];
-            data->average_rssi = data->average_rssi + data->rssi_array[data->loop_counter];
+    if(data->loop_counter == 9){
+
+        for(int i = 0 ; i < (TELEMTRY_DATA_SAMPLES-1) ; i++){
+            data->average_relative_alt = data->average_relative_alt + data->relative_alt_array[i];
+            data->average_hdg = data->average_hdg + data->hdg_array[i];
+            data->average_battery_remaining = data->average_battery_remaining + data->battery_remaining_array[i];
+            data->average_current_battery = data->average_current_battery + data->current_battery_array[i];
+            data->average_voltage_battery = data->average_voltage_battery + data->voltage_battery_array[i];
+            data->average_cpu_load = data->average_cpu_load + data->cpu_load_array[i];
+            data->average_drop_rate_comm = data->average_drop_rate_comm + data->drop_rate_comm_array[i];
+            data->average_lat = data->average_lat + data->lat_array[i];
+            data->average_lon = data->average_lon + data->lon_array[i];
+            data->average_satellites_visible = data->average_satellites_visible + data->satellites_visible_array[i];
+            data->average_cog = data->average_cog + data->cog_array[i];
+            data->average_vel = data->average_vel + data->vel_array[i];
+            data->average_rssi = data->average_rssi + data->rssi_array[i];
         }
 
-        data->loop_counter++;
+        data->average_relative_alt /= TELEMTRY_DATA_SAMPLES;
+        data->average_hdg /= TELEMTRY_DATA_SAMPLES;
+        data->average_battery_remaining /= TELEMTRY_DATA_SAMPLES;
+        data->average_current_battery /= TELEMTRY_DATA_SAMPLES;
+        data->average_voltage_battery /= TELEMTRY_DATA_SAMPLES;
+        data->average_cpu_load /= TELEMTRY_DATA_SAMPLES;
+        data->average_drop_rate_comm /= TELEMTRY_DATA_SAMPLES;
+        data->average_lat /= TELEMTRY_DATA_SAMPLES;
+        data->average_lon /= TELEMTRY_DATA_SAMPLES;
+        data->average_satellites_visible /= TELEMTRY_DATA_SAMPLES;
+        data->average_cog /= TELEMTRY_DATA_SAMPLES;
+        data->average_vel /= TELEMTRY_DATA_SAMPLES;
+        data->average_rssi /= TELEMTRY_DATA_SAMPLES;
+
+        data->loop_counter = 0;
         
     }
     else{
-        data->average_relative_alt /= ARRAY_SIZE;
-        data->average_hdg /= ARRAY_SIZE;
-        data->average_battery_remaining /= ARRAY_SIZE;
-        data->average_current_battery /= ARRAY_SIZE;
-        data->average_voltage_battery /= ARRAY_SIZE;
-        data->average_cpu_load /= ARRAY_SIZE;
-        data->average_drop_rate_comm /= ARRAY_SIZE;
-        data->average_lat /= ARRAY_SIZE;
-        data->average_lon /= ARRAY_SIZE;
-        data->average_satellites_visible /= ARRAY_SIZE;
-        data->average_cog /= ARRAY_SIZE;
-        data->average_vel /= ARRAY_SIZE;
-        data->average_rssi /= ARRAY_SIZE;
-
-        data->loop_counter = 0;
+        
+        data->loop_counter++;
+        
     }
+};
+//READY
+void set_tracker_position(telemetry_data *data){
+    data->tracker_lat = data->average_lat;
+    data->tracker_lon = data->average_lon;
+};
+
+double calculate_azimuth_deg(int32_t object_lat, int32_t object_lon, int32_t tracker_lat, int32_t tracker_lon){
+
+    double object_lat_deg = convert_to_degrees(object_lat);
+    double object_lon_deg = convert_to_degrees(object_lon);
+    double tracker_lat_deg = convert_to_degrees(tracker_lat);
+    double tracker_lon_deg = convert_to_degrees(tracker_lon);
+
+    object_lat_deg -= tracker_lat_deg;
+    object_lon_deg -= tracker_lon_deg;
+    
+    return(atan2(object_lat_deg,object_lon_deg)* (180 / 3.141592));
+
+};
+
+double convert_to_degrees(int32_t lat_or_lon ){
+    int32_t whole_deg = lat_or_lon / 10000000L;
+    double fractional_deg = (lat_or_lon - whole_deg*10000000L);
+    while(fractional_deg > 1){
+        fractional_deg /= 10;
+    }
+    return(whole_deg + fractional_deg);
 };

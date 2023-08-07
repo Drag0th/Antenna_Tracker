@@ -6,6 +6,7 @@
 #include "modules/data_storage/data_storage.h"
 #include "modules/displayData/displayData.h"
 
+
 #define I2C_ADDRESS 0x3C
 #define RST_PIN -1
 #define buz 2
@@ -172,6 +173,7 @@ void loop() {
         //TEST
         process_telemetry_data(&data_storage);
         display_data();
+
         
       }//print flag
       else {
