@@ -36,6 +36,7 @@ void process_telemetry_data(telemetry_data *data){
 
         data->loop_counter = 0;
         
+        
     }
     else{
         
