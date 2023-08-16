@@ -1,3 +1,7 @@
 #pragma once
 
 #define TELEMTRY_DATA_SAMPLES 10
+#define TRIPOD_HEIGHT 1.5
+#define DEG_TO_KM_RATIO 111
+#define STEPS_PER_REVOLUTION 200*6
+#define STEPPER_MOTOR_SPEED 50

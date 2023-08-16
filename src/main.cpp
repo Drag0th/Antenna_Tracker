@@ -4,8 +4,8 @@
 #include <mavlink.h>
 #include <EEPROM.h>
 #include "modules/data_storage/data_storage.h"
-#include "modules/displayData/displayData.h"
-
+#include "modules/data_display/data_display.h"
+#include "modules/kinematics/kinematics.h"
 
 #define I2C_ADDRESS 0x3C
 #define RST_PIN -1

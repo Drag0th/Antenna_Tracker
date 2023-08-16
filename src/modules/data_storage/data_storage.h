@@ -29,5 +29,7 @@ void set_tracker_position(telemetry_data *data);
 
 double calculate_azimuth_deg(int32_t object_lat, int32_t object_lon, int32_t tracker_lat, int32_t tracker_lon);
 
+double calculate_elevation_deg(int32_t object_lat, int32_t object_lon, int32_t tracker_lat, int32_t tracker_lon);
+
 double convert_to_degrees(int32_t input);
 

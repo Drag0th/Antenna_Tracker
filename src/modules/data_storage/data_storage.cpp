@@ -1,5 +1,8 @@
 #include "data_storage.h"
 #include <cmath>
+
+#define pi 3.141592
+
 //REWORK
 void process_telemetry_data(telemetry_data *data){
     if(data->loop_counter == 9){
@@ -36,7 +39,6 @@ void process_telemetry_data(telemetry_data *data){
 
         data->loop_counter = 0;
         
-        
     }
     else{
         
@@ -60,8 +62,24 @@ double calculate_azimuth_deg(int32_t object_lat, int32_t object_lon, int32_t tra
     object_lat_deg -= tracker_lat_deg;
     object_lon_deg -= tracker_lon_deg;
     
-    return(atan2(object_lat_deg,object_lon_deg)* (180 / 3.141592));
+    return(atan2(object_lat_deg,object_lon_deg)* (180 / pi));
 
+};
+
+double calculate_elevation_deg(int32_t object_lat, int32_t object_lon, int32_t object_alt, int32_t tracker_lat, int32_t tracker_lon){
+
+    double object_lat_deg = convert_to_degrees(object_lat);
+    double object_lon_deg = convert_to_degrees(object_lon);
+    double tracker_lat_deg = convert_to_degrees(tracker_lat);
+    double tracker_lon_deg = convert_to_degrees(tracker_lon);
+
+    object_lat_deg -= tracker_lat_deg;
+    object_lon_deg -= tracker_lon_deg;
+
+    double distane_tracker_object = (sqrt(pow(object_lat_deg, 2)+pow(object_lon_deg, 2)))*DEG_TO_KM_RATIO;
+    double distance_ground_object = (object_alt/1000000) - TRIPOD_HEIGHT;
+
+    return(asin(distance_ground_object/distane_tracker_object));
 };
 
 double convert_to_degrees(int32_t lat_or_lon ){
