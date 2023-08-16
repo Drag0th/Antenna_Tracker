@@ -6,6 +6,7 @@
 #include "modules/data_storage/data_storage.h"
 #include "modules/data_display/data_display.h"
 #include "modules/kinematics/kinematics.h"
+#include "modules/calibrations_and_tests/calibrations_and_tests.h"
 
 #define I2C_ADDRESS 0x3C
 #define RST_PIN -1

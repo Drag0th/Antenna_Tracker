@@ -1,7 +1,5 @@
 #include "calibrations_and_tests.h"
 #include "../config.h"
-#include <AccelStepper.h>
-#include <Servo.h>
 
 void test_movement(AccelStepper& stepper_motor, Servo& servo_motor){
     stepper_motor.moveTo(STEPS_PER_REVOLUTION);

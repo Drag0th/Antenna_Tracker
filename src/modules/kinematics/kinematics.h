@@ -1,4 +1,6 @@
 #pragma once
+#include <AccelStepper.h>
+#include <Servo.h>
 
 void azimuth_movement(AccelStepper& stepper_motor, double deg);
 
