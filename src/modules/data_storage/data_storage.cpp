@@ -47,10 +47,6 @@ void process_telemetry_data(telemetry_data *data){
     }
 };
 //READY
-void set_tracker_position(telemetry_data *data){
-    data->tracker_lat = data->average_lat;
-    data->tracker_lon = data->average_lon;
-};
 
 double calculate_azimuth_deg(int32_t object_lat, int32_t object_lon, int32_t tracker_lat, int32_t tracker_lon){
 
