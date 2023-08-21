@@ -18,19 +18,17 @@
 telemetry_data data_storage = {0};
 SSD1306AsciiWire oled;
 
+uint8_t calibration_flag, data_flag;
+
 //???
 //#define DEBUG
 mavlink_message_t msg;
 mavlink_status_t status;
 //oth
-uint8_t flag, eeprom_flag = 0;
-uint32_t time_flag;
+uint8_t flag;
 
-
-
-
+//do usuniecia potem
 void set_flag();
-void display_wait();
 void display_data();
 void no_data();
 void printL(int32_t degE7);
@@ -40,13 +38,12 @@ void setup() {
   Wire.begin();
   Wire.setClock(400000L);
   oled.begin(&Adafruit128x32, I2C_ADDRESS);
-  display_wait();
-  
+  display_telemetry_lost(oled);
   Serial.begin(SERIAL_SPEED);
-  //
-  time_flag = millis();
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
+  pinMode(BUTTION0_PIN, INPUT);
+
 }
 //------------------------------------------------------------------------------
 void loop() {
@@ -161,19 +158,42 @@ void loop() {
       if(flag == 1) {
 
         process_telemetry_data(&data_storage);
-        display_data();
+
+        if(calibration_flag == 1){
+          if(data_flag == 0)
+            display_data(&data_storage, oled);
+          else
+            display_average_data(&data_storage, oled);
+        }
+        else{
+          
+        }
         
       }//print flag
       else {
-        no_data();
+        if(calibration_flag == 1){
+          if(data_flag == 0)
+            display_data(&data_storage, oled);
+          else
+            display_average_data(&data_storage, oled);
+        }
+        else{
+          
+        }
       }
     }//if mavlink_parse_char
   }//while serial available
-  no_data(); //check no serial input data fuction
+
+  if(calibration_flag == 0){
+    display_calibration_message(oled);
+    if((digitalRead(BUTTION0_PIN)) == HIGH){
+      set_tracker_position(&data_storage);
+      calibration_flag = 1;
+    }
+  }
+
 }
 
 void set_flag() {
     flag = 1;
-    eeprom_flag = 0;
-    time_flag = millis();
 }

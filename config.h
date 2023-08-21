@@ -8,3 +8,4 @@
 #define STEPPER_MOTOR_SPEED 50
 //PINS
 #define BUZZER_PIN 2
+#define BUTTION0_PIN 5

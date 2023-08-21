@@ -1,5 +1,7 @@
 #pragma once
 #include <Arduino.h>
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
 #include "./modules/data_storage/data_storage.h"
 
 void printL(int32_t degE7, SSD1306AsciiWire &oled_display);
