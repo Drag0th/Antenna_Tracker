@@ -5,7 +5,11 @@
 
 //REWORK
 void process_telemetry_data(telemetry_data *data){
-    if(data->loop_counter == 9){
+    if(data->loop_counter == (TELEMTRY_DATA_SAMPLES-1)){
+
+        data->average_relative_alt_backup = data->average_relative_alt;
+        data->average_lat_backup = data->average_lat;
+        data->average_lon_backup = data->average_lon;
 
         for(int i = 0 ; i < (TELEMTRY_DATA_SAMPLES-1) ; i++){
             data->average_relative_alt = data->average_relative_alt + data->relative_alt_array[i];

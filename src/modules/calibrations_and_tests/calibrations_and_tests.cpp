@@ -8,6 +8,7 @@ void test_movement(AccelStepper& stepper_motor, Servo& servo_motor){
     while(stepper_motor.distanceToGo() != 0) {
         stepper_motor.runSpeedToPosition();
     };
+    stepper_motor.setCurrentPosition(0);
     servo_motor.write(0);
     servo_motor.write(180);
     servo_motor.write(0);

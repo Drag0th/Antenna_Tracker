@@ -2,6 +2,7 @@
 #include "SSD1306Ascii.h"
 #include "SSD1306AsciiWire.h"
 #include <mavlink.h>
+#include <Servo.h> 
 #include "modules/data_storage/data_storage.h"
 #include "modules/data_display/data_display.h"
 #include "modules/kinematics/kinematics.h"
@@ -16,22 +17,17 @@
 #define SERIAL_SPEED 57600 //mavlink input baud, 4800 for qczek 2.10
 
 telemetry_data data_storage = {0};
+AccelStepper stepper_motor(AccelStepper::DRIVER, STEPPER_DRIVER_DIR_PIN, STEPPER_DRIVER_DIR_PIN);
+Servo servo_motor;
 SSD1306AsciiWire oled;
 
-uint8_t calibration_flag, data_flag;
+uint8_t calibration_flag, data_flag, flag;
 
-//???
-//#define DEBUG
+void set_flag();
+
 mavlink_message_t msg;
 mavlink_status_t status;
-//oth
-uint8_t flag;
 
-//do usuniecia potem
-void set_flag();
-void display_data();
-void no_data();
-void printL(int32_t degE7);
 
 //------------------------------------------------------------------------------
 void setup() {
@@ -43,6 +39,7 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
   pinMode(BUTTION0_PIN, INPUT);
+  servo_motor.attach(SERVO_MOTOR_PIN);
 
 }
 //------------------------------------------------------------------------------
@@ -159,15 +156,22 @@ void loop() {
 
         process_telemetry_data(&data_storage);
 
+        
+        
         if(calibration_flag == 1){
+          if(data_storage.average_relative_alt_backup != data_storage.average_relative_alt or data_storage.average_lat_backup != data_storage.average_lat or data_storage.average_lon_backup != data_storage.average_lon){
+            azimuth_movement(stepper_motor, calculate_azimuth_deg(data_storage.average_lat, data_storage.average_lon, data_storage.tracker_lat, data_storage.average_lon));
+            elevation_movement(servo_motor, calculate_elevation_deg(data_storage.average_lat, data_storage.average_lon, data_storage.average_relative_alt, data_storage.average_lat, data_storage.average_lon));
+            rssi_guard(&data_storage);
+          };
           if(data_flag == 0)
             display_data(&data_storage, oled);
           else
             display_average_data(&data_storage, oled);
         }
         else{
-          
-        }
+          display_calibration_message(oled);
+        };
         
       }//print flag
       else {
@@ -178,8 +182,8 @@ void loop() {
             display_average_data(&data_storage, oled);
         }
         else{
-          
-        }
+          display_calibration_message(oled);
+        };
       }
     }//if mavlink_parse_char
   }//while serial available
@@ -191,6 +195,16 @@ void loop() {
       calibration_flag = 1;
     }
   }
+  else{
+    if((digitalRead(BUTTION0_PIN)) == HIGH){
+      if(data_flag == 0){
+        data_flag = 1;
+      }
+      else{
+        data_flag = 0;
+      };
+    }
+  };
 
 }
 
