@@ -77,7 +77,7 @@ double calculate_elevation_deg(int32_t object_lat, int32_t object_lon, int32_t o
     object_lon_deg -= tracker_lon_deg;
 
     double distane_tracker_object = (sqrt(pow(object_lat_deg, 2)+pow(object_lon_deg, 2)))*DEG_TO_KM_RATIO;
-    double distance_ground_object = (object_alt/1000000) - TRIPOD_HEIGHT;
+    double distance_ground_object = ((object_alt/1000000) - TRIPOD_HEIGHT)/1000;
 
     return(asin(distance_ground_object/distane_tracker_object));
 };
