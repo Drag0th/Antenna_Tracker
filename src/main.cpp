@@ -40,8 +40,7 @@ void setup() {
   digitalWrite(BUZZER_PIN, LOW);
   pinMode(BUTTION0_PIN, INPUT);
   servo_motor.attach(SERVO_MOTOR_PIN);
-  test_movement(stepper_motor, servo_motor);
-
+  //test_movement(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
@@ -167,24 +166,24 @@ void loop() {
           //};
           if(data_flag == 0)
             display_data(&data_storage, oled);
-          else
-            display_average_data(&data_storage, oled);
+          //else
+            //display_average_data(&data_storage, oled);
         }
         else{
           display_calibration_message(oled);
-        };
+        }
         
       }//print flag
       else {
         if(calibration_flag == 1){
           if(data_flag == 0)
             display_data(&data_storage, oled);
-          else
-            display_average_data(&data_storage, oled);
+          //else
+            //display_average_data(&data_storage, oled);
         }
         else{
           display_calibration_message(oled);
-        };
+        }
       }
     }//if mavlink_parse_char
   }//while serial available
@@ -203,9 +202,16 @@ void loop() {
       }
       else{
         data_flag = 0;
-      };
+      }
     }
-  };
+  }
+
+  if(data_storage.loop_counter == (TELEMTRY_DATA_SAMPLES-1)){
+    data_storage.loop_counter = 0;
+  }
+  else{
+    data_storage.loop_counter++;
+  }
 
 }
 

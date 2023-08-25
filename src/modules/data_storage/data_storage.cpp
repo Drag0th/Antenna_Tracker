@@ -40,13 +40,9 @@ void process_telemetry_data(telemetry_data *data){
         data->average_cog /= TELEMTRY_DATA_SAMPLES;
         data->average_vel /= TELEMTRY_DATA_SAMPLES;
         data->average_rssi /= TELEMTRY_DATA_SAMPLES;
-
-        data->loop_counter = 0;
         
     }
     else{
-        
-        data->loop_counter++;
         
     }
 };
