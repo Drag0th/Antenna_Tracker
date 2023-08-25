@@ -2,13 +2,13 @@
 #include "../config.h"
 #include "./modules/data_storage/data_storage.h"
 
-void test_movement(AccelStepper& stepper_motor, Servo& servo_motor){
-    stepper_motor.moveTo(STEPS_PER_REVOLUTION);
-    stepper_motor.setSpeed(STEPPER_MOTOR_SPEED);
-    while(stepper_motor.distanceToGo() != 0) {
-        stepper_motor.runSpeedToPosition();
-    };
-    stepper_motor.setCurrentPosition(0);
+void test_movement(AccelStepper &stepper_motor, Servo &servo_motor){
+    //stepper_motor.moveTo(STEPS_PER_REVOLUTION);
+    //stepper_motor.setSpeed(STEPPER_MOTOR_SPEED);
+    //while(stepper_motor.distanceToGo() != 0) {
+        //stepper_motor.runSpeedToPosition();
+    //};
+    //stepper_motor.setCurrentPosition(0);
     servo_motor.write(0);
     servo_motor.write(180);
     servo_motor.write(0);
