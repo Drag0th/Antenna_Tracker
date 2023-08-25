@@ -8,9 +8,6 @@
 #include "modules/kinematics/kinematics.h"
 #include "modules/calibrations_and_tests/calibrations_and_tests.h"
 
-//???
-#define RST_PIN -1
-
 //GIT
 #define I2C_ADDRESS 0x3C
 #define MAV_TIMEOUT 5000 //mavlink timeout
@@ -153,58 +150,10 @@ void loop() {
         }
       }//switch
       if(flag == 1) {
-
-        process_telemetry_data(&data_storage);
-
-        
-        
-        if(calibration_flag == 1){
-          //if(data_storage.average_relative_alt_backup != data_storage.average_relative_alt or data_storage.average_lat_backup != data_storage.average_lat or data_storage.average_lon_backup != data_storage.average_lon){
-            //azimuth_movement(stepper_motor, calculate_azimuth_deg(data_storage.average_lat, data_storage.average_lon, data_storage.tracker_lat, data_storage.average_lon));
-            //elevation_movement(servo_motor, calculate_elevation_deg(data_storage.average_lat, data_storage.average_lon, data_storage.average_relative_alt, data_storage.average_lat, data_storage.average_lon));
-            //rssi_guard(&data_storage);
-          //};
-          if(data_flag == 0)
             display_data(&data_storage, oled);
-          //else
-            //display_average_data(&data_storage, oled);
         }
-        else{
-          display_calibration_message(oled);
-        }
-        
-      }//print flag
-      else {
-        if(calibration_flag == 1){
-          if(data_flag == 0)
-            display_data(&data_storage, oled);
-          //else
-            //display_average_data(&data_storage, oled);
-        }
-        else{
-          display_calibration_message(oled);
-        }
-      }
     }//if mavlink_parse_char
   }//while serial available
-
-  if(calibration_flag == 0){
-    display_calibration_message(oled);
-    if((digitalRead(BUTTION0_PIN)) == HIGH){
-      set_tracker_position(&data_storage);
-      calibration_flag = 1;
-    }
-  }
-  else{
-    if((digitalRead(BUTTION0_PIN)) == HIGH){
-      if(data_flag == 0){
-        data_flag = 1;
-      }
-      else{
-        data_flag = 0;
-      }
-    }
-  }
 
   if(data_storage.loop_counter == (TELEMTRY_DATA_SAMPLES-1)){
     data_storage.loop_counter = 0;
