@@ -40,6 +40,7 @@ void setup() {
   digitalWrite(BUZZER_PIN, LOW);
   pinMode(BUTTION0_PIN, INPUT);
   servo_motor.attach(SERVO_MOTOR_PIN);
+  test_movement(stepper_motor, servo_motor);
 
 }
 //------------------------------------------------------------------------------
@@ -159,11 +160,11 @@ void loop() {
         
         
         if(calibration_flag == 1){
-          if(data_storage.average_relative_alt_backup != data_storage.average_relative_alt or data_storage.average_lat_backup != data_storage.average_lat or data_storage.average_lon_backup != data_storage.average_lon){
-            azimuth_movement(stepper_motor, calculate_azimuth_deg(data_storage.average_lat, data_storage.average_lon, data_storage.tracker_lat, data_storage.average_lon));
-            elevation_movement(servo_motor, calculate_elevation_deg(data_storage.average_lat, data_storage.average_lon, data_storage.average_relative_alt, data_storage.average_lat, data_storage.average_lon));
-            rssi_guard(&data_storage);
-          };
+          //if(data_storage.average_relative_alt_backup != data_storage.average_relative_alt or data_storage.average_lat_backup != data_storage.average_lat or data_storage.average_lon_backup != data_storage.average_lon){
+            //azimuth_movement(stepper_motor, calculate_azimuth_deg(data_storage.average_lat, data_storage.average_lon, data_storage.tracker_lat, data_storage.average_lon));
+            //elevation_movement(servo_motor, calculate_elevation_deg(data_storage.average_lat, data_storage.average_lon, data_storage.average_relative_alt, data_storage.average_lat, data_storage.average_lon));
+            //rssi_guard(&data_storage);
+          //};
           if(data_flag == 0)
             display_data(&data_storage, oled);
           else
