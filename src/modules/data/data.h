@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include "../config.h"
 
 typedef struct{
     //data input
