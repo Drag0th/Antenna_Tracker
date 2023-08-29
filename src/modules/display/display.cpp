@@ -50,6 +50,6 @@ void display_wait(SSD1306AsciiWire &display) {
   display.setFont(System5x7);
 
   digitalWrite(BUZZER_PIN, HIGH);
-  delay(100);
+  delay(1000);
   digitalWrite(BUZZER_PIN,LOW);
 }
