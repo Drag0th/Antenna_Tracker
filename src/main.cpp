@@ -31,7 +31,7 @@ void setup() {
   Wire.setClock(400000L);
   oled_display.begin(&Adafruit128x32, I2C_ADDRESS);
   //
-  Serial1.begin(SERIAL_SPEED);
+  Serial.begin(SERIAL_SPEED);
   //
   time_flag = millis();
   pinMode(buz, OUTPUT);
@@ -39,8 +39,8 @@ void setup() {
 }
 //------------------------------------------------------------------------------
 void loop() {
-  while(Serial1.available()) {
-    uint8_t c= Serial1.read();
+  while(Serial.available()) {
+    uint8_t c= Serial.read();
     if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
     flag = 0;
     switch(msg.msgid) {
