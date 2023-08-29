@@ -158,5 +158,7 @@ void no_data() {
      Serial.println((String)"LOST MAVLINK DATA");
      #endif
      display_wait(oled_display);
+     delay(5000);
+     display_current_data(&data_storage, oled_display);
   }
 } 
