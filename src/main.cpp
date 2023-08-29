@@ -160,6 +160,6 @@ void no_data() {
      display_wait(oled_display);
      delay(5000);
      display_current_data(&data_storage, oled_display);
-     delay(5000);
+     delay(1000);
   }
 } 
