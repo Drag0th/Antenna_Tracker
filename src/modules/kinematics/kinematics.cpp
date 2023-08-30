@@ -9,11 +9,11 @@ void check_motors(AccelStepper &stepper_motor, Servo &servo_motor){
     //}
     //stepper_motor.setCurrentPosition(0);
     servo_motor.write(180);
-    while(servo_motor.read() != 180){
-        delay(100);
-    }
+    //while(servo_motor.read() != 180){
+        delay(1000);
+    //}
     servo_motor.write(0);
-    while(servo_motor.read() != 10){
-        delay(100);
-    }
+    //while(servo_motor.read() != 10){
+        delay(1000);
+    //}
 };
