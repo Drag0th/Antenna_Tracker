@@ -58,8 +58,8 @@ void display_calibration_message(SSD1306AsciiWire &display) {
   display.setFont(System5x7);
   display.set2X();
   display.clear();
-  display.println("CALIBRATE");
-  display.println("   ME!   ");
+  display.println(" CALIBRATE");
+  display.println("    ME!   ");
   display.set1X();
   display.setFont(System5x7);
 }
