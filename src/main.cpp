@@ -42,7 +42,7 @@ void setup() {
   //servo
   servo_motor.attach(SERVO_MOTOR_PIN, 544, 2400);
   //movement check
-  //check_motors(stepper_motor, servo_motor);
+  check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
