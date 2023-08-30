@@ -40,12 +40,13 @@ void setup() {
   //button0
   pinMode(BUTTION0_PIN, INPUT);
   //servo
-  servo_motor.attach(SERVO_MOTOR_PIN);
+  servo_motor.attach(SERVO_MOTOR_PIN, 544, 2400);
   //movement check
-  check_motors(stepper_motor, servo_motor);
+  //check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
+  calibration_time_check = millis();
   while(Serial.available()) {
     uint8_t c= Serial.read();
     if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
@@ -143,9 +144,8 @@ void loop() {
         }
     }
     if(flag == 1) {
-      calibration_time_check = millis();
       if(calibration_flag == 0){
-        if (calibration_time_check - calibration_time_flag >= 1000) {
+        if (calibration_time_check - calibration_time_flag >= 1000UL) {
           calibration_time_flag = calibration_time_check;
           if(message_switch == 0){
             display_calibration_message(oled_display);
