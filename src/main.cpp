@@ -145,7 +145,7 @@ void loop() {
     if(flag == 1) {
       calibration_time_check = millis();
       if(calibration_flag == 0){
-        if (calibration_time_check - calibration_time_flag >= 1000UL) {
+        if (calibration_time_check - calibration_time_flag >= 100UL) {
           calibration_time_flag = calibration_time_check;
           if(message_switch == 0){
             display_calibration_message(oled_display);
