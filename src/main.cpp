@@ -167,8 +167,8 @@ void loop() {
   }
   no_data();
   //
-  //if(digitalRead(BUTTION0_PIN) == HIGH)
-    //calibration_flag = 1;
+  if(digitalRead(BUTTION0_PIN) == HIGH)
+    calibration_flag = 1;
   // 
 }
 
