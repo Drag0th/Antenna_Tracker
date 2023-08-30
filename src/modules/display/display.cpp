@@ -1,5 +1,5 @@
 #include "display.h"
-#include "../config.h"
+#include "../src/config.h"
 
 void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
   display.clear();
@@ -40,7 +40,7 @@ void printL(int32_t degE7, SSD1306AsciiWire &display) {
   display.print( degE7 );
 }
 
-void display_wait(SSD1306AsciiWire &display) {
+void display_wait_message(SSD1306AsciiWire &display) {
   display.setFont(System5x7);
   display.set2X();
   display.clear();
@@ -50,6 +50,16 @@ void display_wait(SSD1306AsciiWire &display) {
   display.setFont(System5x7);
 
   digitalWrite(BUZZER_PIN, HIGH);
-  delay(1000);
+  delay(3000);
   digitalWrite(BUZZER_PIN,LOW);
+}
+
+void display_calibration_message(SSD1306AsciiWire &display) {
+  display.setFont(System5x7);
+  display.set2X();
+  display.clear();
+  display.println("CALIBRATE");
+  display.println("   ME!   ");
+  display.set1X();
+  display.setFont(System5x7);
 }

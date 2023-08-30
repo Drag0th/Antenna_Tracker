@@ -1,16 +1,18 @@
 #include <Wire.h>
 #include <mavlink.h>
 //MODULES
+#include "config.h"
 #include "modules/display/display.h"
+#include "modules/kinematics/kinematics.h"
 
 //MY VARIABLES
 telemetry_data data_storage;
 SSD1306AsciiWire oled_display;
+AccelStepper stepper_motor(AccelStepper::DRIVER, STEPPER_DRIVER_DIR_PIN, STEPPER_DRIVER_DIR_PIN);
+Servo servo_motor;
 //
 
 #define I2C_ADDRESS 0x3C
-#define RST_PIN -1
-#define buz 2
 
 
 #define MAV_TIMEOUT 5000 //mavlink timeout
@@ -19,8 +21,8 @@ SSD1306AsciiWire oled_display;
 mavlink_message_t msg;
 mavlink_status_t status;
 //oth
-uint8_t flag, eeprom_flag = 0;
-uint32_t time_flag;
+uint8_t flag, eeprom_flag = 0, calibration_flag = 0, message_switch = 0;
+uint32_t time_flag, calibration_time_flag, calibration_time_check;
 
 //DELETE
 void set_flag();
@@ -30,12 +32,17 @@ void setup() {
   Wire.begin();
   Wire.setClock(400000L);
   oled_display.begin(&Adafruit128x32, I2C_ADDRESS);
-  //
   Serial.begin(SERIAL_SPEED);
-  //
   time_flag = millis();
-  pinMode(buz, OUTPUT);
-  digitalWrite(buz, LOW);
+  //buzzer
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
+  //button0
+  pinMode(BUTTION0_PIN, INPUT);
+  //servo
+  servo_motor.attach(SERVO_MOTOR_PIN);
+  //movement check
+  check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
@@ -134,16 +141,35 @@ void loop() {
           #endif
         break;
         }
-    }//switch
+    }
     if(flag == 1) {
-      display_current_data(&data_storage, oled_display);
-    }//print flag
+      calibration_time_check = millis();
+      if(calibration_flag == 0){
+        if (calibration_time_check - calibration_time_flag >= 3000) {
+          calibration_time_flag = calibration_time_check;
+          if(message_switch == 0){
+            display_calibration_message(oled_display);
+            message_switch = 1;
+          }
+          else{
+            display_current_data(&data_storage, oled_display);
+            message_switch = 0;
+          }
+        }
+      }
+      else
+        display_current_data(&data_storage, oled_display);
+    }
     else {
       no_data();
     }
-   }//if mavlink_parse_char
-  }//while serial available
-  no_data(); //check no serial input data fuction
+   }
+  }
+  no_data();
+  //
+  if(digitalRead(BUTTION0_PIN) == HIGH)
+    calibration_flag = 1;
+  // 
 }
 
 void set_flag() {
@@ -157,7 +183,7 @@ void no_data() {
      #ifdef DEBUG
      Serial.println((String)"LOST MAVLINK DATA");
      #endif
-     display_wait(oled_display);
+     display_wait_message(oled_display);
      delay(3000);
      display_current_data(&data_storage, oled_display);
      delay(3000);
