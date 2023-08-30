@@ -1,7 +1,7 @@
 #include "kinematics.h"
 #include "../src/config.h"
 
-void check_motors(AccelStepper &stepper_motor, Servo &servo_motor){
+void check_motors(AccelStepper stepper_motor, Servo servo_motor){
     stepper_motor.moveTo(STEPS_PER_REVOLUTION);
     stepper_motor.setSpeed(STEPPER_MOTOR_SPEED);
     while(stepper_motor.distanceToGo() != 0) {

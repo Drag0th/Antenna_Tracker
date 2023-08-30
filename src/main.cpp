@@ -42,7 +42,7 @@ void setup() {
   //servo
   servo_motor.attach(SERVO_MOTOR_PIN);
   //movement check
-  check_motors(stepper_motor, servo_motor);
+  //check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
@@ -145,7 +145,7 @@ void loop() {
     if(flag == 1) {
       calibration_time_check = millis();
       if(calibration_flag == 0){
-        if (calibration_time_check - calibration_time_flag >= 3000) {
+        if (calibration_time_check - calibration_time_flag >= 1000) {
           calibration_time_flag = calibration_time_check;
           if(message_switch == 0){
             display_calibration_message(oled_display);
