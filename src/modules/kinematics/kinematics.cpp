@@ -3,7 +3,7 @@
 
 void check_motors(A4988 &stepper_motor, Servo &servo_motor){
     digitalWrite(BUZZER_PIN, HIGH); //daje znać że żyje 
-    delay(100);
+    delay(500);
     digitalWrite(BUZZER_PIN, LOW);
     delay(5000); //zwłoka 5s żeby po podłączeniu zasilania nie zajebało mi po łapach anteną 
     stepper_motor.rotate(360);
