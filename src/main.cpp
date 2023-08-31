@@ -42,8 +42,7 @@ void setup() {
   //servo
   servo_motor.attach(SERVO_MOTOR_PIN, 544, 2400);
   //movement check
-  stepper_motor.setSpeedProfile(BasicStepperDriver::LINEAR_SPEED, 2000, 2000);
-  stepper_motor.begin(1, 1);
+  stepper_motor.begin(10, 1);
   check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
