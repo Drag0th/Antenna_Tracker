@@ -46,6 +46,7 @@ void setup() {
 }
 //------------------------------------------------------------------------------
 void loop() {
+  stepper_motor.runSpeedToPosition();
   while(Serial.available()) {
     uint8_t c= Serial.read();
     if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {

@@ -4,8 +4,6 @@
 void check_motors(AccelStepper &stepper_motor, Servo &servo_motor){
     stepper_motor.moveTo(STEPS_PER_REVOLUTION);
     stepper_motor.setSpeed(STEPPER_MOTOR_SPEED);
-    stepper_motor.runToPosition();
-    stepper_motor.setCurrentPosition(0);
     servo_motor.write(180);
     delay(1000);
     servo_motor.write(0);
