@@ -8,7 +8,7 @@
 //MY VARIABLES
 telemetry_data data_storage;
 SSD1306AsciiWire oled_display;
-AccelStepper stepper_motor(AccelStepper::DRIVER, STEPPER_DRIVER_DIR_PIN, STEPPER_DRIVER_DIR_PIN);
+A4988 stepper_motor(STEPS_PER_REVOLUTION, STEPPER_DRIVER_DIR_PIN, STEPPER_DRIVER_STEP_PIN);
 Servo servo_motor;
 //
 
@@ -42,11 +42,11 @@ void setup() {
   //servo
   servo_motor.attach(SERVO_MOTOR_PIN, 544, 2400);
   //movement check
+  stepper_motor.begin(1, 1);
   check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
 void loop() {
-  stepper_motor.runSpeedToPosition();
   while(Serial.available()) {
     uint8_t c= Serial.read();
     if(mavlink_parse_char(MAVLINK_COMM_0, c, &msg, &status)) {
