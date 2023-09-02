@@ -29,6 +29,19 @@ typedef struct{
     int cog_buffer;
     int vel_buffer;
     int rssi_buffer;
+    // average data
+    int32_t average_alt;
+    int32_t average_relative_alt;
+    uint16_t average_hdg; 
+    uint16_t average_cpu_load; 
+    uint16_t average_drop_rate_comm;
+    int32_t average_lat;
+    int32_t average_lon;
+    uint8_t average_satellites_visible;
+    uint8_t average_fix_type;
+    uint16_t average_cog;
+    uint16_t average_vel;
+    uint8_t average_rssi;
     // postion/movement data
     uint16_t stepper_motor_postion;
 }telemetry_data;
