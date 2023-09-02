@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 typedef struct{
-    //data input
+    // data input
     int32_t alt;
     int32_t relative_alt;
     uint16_t hdg; 
@@ -16,7 +16,7 @@ typedef struct{
     uint16_t cog;
     uint16_t vel;
     uint8_t rssi;
-    //data buffers
+    // data buffers
     int alt_buffer;
     int relative_alt_buffer;
     int hdg_buffer;
@@ -29,4 +29,6 @@ typedef struct{
     int cog_buffer;
     int vel_buffer;
     int rssi_buffer;
+    // postion/movement data
+    uint16_t stepper_motor_postion;
 }telemetry_data;

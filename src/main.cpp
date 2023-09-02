@@ -41,9 +41,10 @@ void setup() {
   pinMode(BUTTION0_PIN, INPUT);
   //servo
   servo_motor.attach(SERVO_MOTOR_PIN, 544, 2400);
-  //movement check
-  stepper_motor.setSpeedProfile(BasicStepperDriver::LINEAR_SPEED, STEPPER_MOTOR_ACCELERATION, STEPPER_MOTOR_DECELERATION);
+  //stepper
+  stepper_motor.setSpeedProfile(A4988::LINEAR_SPEED, STEPPER_MOTOR_ACCELERATION, STEPPER_MOTOR_DECELERATION);
   stepper_motor.begin(STEPPER_MOTOR_RPM, STEPPER_MOTOR_MICROSTEPS);
+  //movement check
   check_motors(stepper_motor, servo_motor);
 }
 //------------------------------------------------------------------------------
