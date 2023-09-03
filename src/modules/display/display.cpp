@@ -2,8 +2,8 @@
 #include "../src/config.h"
 
 void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
-  display.println("   CURRENT DATA");
   display.clear();
+  display.println("   CURRENT DATA");
   printL(data->lat, display); //gps
   display.print(" ");
   printL(data->lon, display);
