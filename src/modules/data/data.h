@@ -45,6 +45,11 @@ typedef struct{
     uint8_t average_rssi;
     // postion/movement data
     uint16_t stepper_motor_postion;
+    int32_t tracker_lat;
+    int32_t tracker_lon;
+
 }telemetry_data;
 
+void process_data(telemetry_data *data);
 void summarize_data(telemetry_data *data);
+void set_tracker_postion(telemetry_data *data);

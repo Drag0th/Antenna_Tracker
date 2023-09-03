@@ -4,6 +4,7 @@
 #include "config.h"
 #include "modules/display/display.h"
 #include "modules/kinematics/kinematics.h"
+#include "modules/data/data.h"
 
 //MY VARIABLES
 telemetry_data data_storage;
@@ -21,7 +22,7 @@ Servo servo_motor;
 mavlink_message_t msg;
 mavlink_status_t status;
 //oth
-uint8_t flag, calibration_flag = 0, message_switch = 0;
+uint8_t flag, calibration_flag, message_switch, display_flag;
 uint32_t time_flag, calibration_time_flag, calibration_time_check;
 
 //DELETE
@@ -143,7 +144,7 @@ void loop() {
     }
     if(flag == 1) {
 
-      
+      process_data(&data_storage);
 
       calibration_time_check = millis();
       if(calibration_flag == 0){
@@ -160,7 +161,10 @@ void loop() {
         }
       }
       else
-        display_current_data(&data_storage, oled_display);
+        if(display_flag == 0)
+          display_current_data(&data_storage, oled_display);
+        else
+          display_average_data(&data_storage, oled_display);
     }
     else {
       if((millis() - time_flag) > MAV_TIMEOUT )
@@ -170,14 +174,20 @@ void loop() {
   }
   if((millis() - time_flag) > MAV_TIMEOUT ) 
     display_no_data_message(&data_storage, oled_display);
+    
   //
-  if(digitalRead(BUTTION0_PIN) == HIGH)
+  if(digitalRead(BUTTION0_PIN) == HIGH){
     if(calibration_flag != 1){
+      set_tracker_postion(&data_storage);
       calibration_flag = 1;
     }
     else{
-
+      if(display_flag == 0)
+        display_flag = 1;
+      else 
+        display_flag = 0;
     }
+  }
   // 
 }
 

@@ -4,7 +4,7 @@
 void process_data(telemetry_data *data){
     if(data->data_counter == (TELEMTRY_DATA_SAMPLES - 1)){
 
-        summarize_data(data);
+        //summarize_data(data);
 
         data->average_alt = data->alt_buffer / TELEMTRY_DATA_SAMPLES;
         data->average_relative_alt = data->relative_alt_buffer / TELEMTRY_DATA_SAMPLES;
@@ -23,7 +23,7 @@ void process_data(telemetry_data *data){
         data->relative_alt_buffer = 0;
         data->hdg_buffer = 0;
         data->cpu_load_buffer = 0;
-        data->drop_rate_comm_buffer;
+        data->drop_rate_comm_buffer = 0;
         data->lat_buffer = 0;
         data->lon_buffer = 0;
         data->satellites_visible_buffer = 0;
@@ -35,7 +35,7 @@ void process_data(telemetry_data *data){
         data->data_counter = 0;
     }
     else{
-        summarize_data(data);
+        //summarize_data(data);
 
         data->data_counter++;
     }
@@ -54,5 +54,11 @@ void summarize_data(telemetry_data *data){
     data->cog_buffer += data->cog;
     data->vel_buffer += data->vel;
     data->rssi_buffer += data->rssi;
+};
+
+
+void set_tracker_postion(telemetry_data *data){
+    data->tracker_lat = data->average_lat;
+    data->tracker_lon = data->average_lon;
 };
 
