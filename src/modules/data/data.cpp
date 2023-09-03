@@ -4,7 +4,7 @@
 void process_data(telemetry_data *data){
     if(data->data_counter == (TELEMTRY_DATA_SAMPLES - 1)){
 
-        //summarize_data(data);
+        summarize_data(data);
 
         data->average_alt = data->alt_buffer / TELEMTRY_DATA_SAMPLES;
         data->average_relative_alt = data->relative_alt_buffer / TELEMTRY_DATA_SAMPLES;
@@ -35,7 +35,7 @@ void process_data(telemetry_data *data){
         data->data_counter = 0;
     }
     else{
-        //summarize_data(data);
+        summarize_data(data);
 
         data->data_counter++;
     }
