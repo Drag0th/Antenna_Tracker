@@ -22,7 +22,7 @@ void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
 void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
   display.clear();
   display.println("   AVERAGE DATA");
-  printL(data->average_alt, display); //gps
+  printL(data->average_lat, display); //gps
   display.print(" ");
   printL(data->average_lon, display);
   display.println();

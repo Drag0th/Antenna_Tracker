@@ -51,5 +51,4 @@ typedef struct{
 }telemetry_data;
 
 void process_data(telemetry_data *data);
-void summarize_data(telemetry_data *data);
 void set_tracker_postion(telemetry_data *data);
