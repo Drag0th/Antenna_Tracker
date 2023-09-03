@@ -3,13 +3,13 @@
 
 void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
   display.clear();
-  display.println("   CURRENT DATA");
+  display.println("    CURRENT DATA");
   printL(data->lat, display); //gps
   display.print(" ");
   printL(data->lon, display);
   display.println();
-  display.println((String)"SATS: "+data->satellites_visible+(String)" "+data->fix_type+(String)"D "  "RSSI: "+map(data->rssi,0,255,0,100)+(String)"%");
-  display.println((String)"DR: "+data->drop_rate_comm/100+(String)"%  "  "ALT: "+data->relative_alt/1000+(String)"m");
+  display.println((String)"SAT: "+data->satellites_visible+(String)" "+data->fix_type+(String)"D "  "RSSI: "+map(data->rssi,0,255,0,100)+(String)"%");
+  display.println((String)"DR: "+data->drop_rate_comm/100+(String)"%  "  "   ALT: "+data->relative_alt/1000+(String)"m");
 
   int rssi_alarm = map(data->rssi,0,255,0,100);
       if(rssi_alarm <= 30){
@@ -21,12 +21,12 @@ void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
 
 void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
   display.clear();
-  display.println("   AVERAGE DATA");
+  display.println("    AVERAGE DATA");
   printL(data->average_lat, display); //gps
   display.print(" ");
   printL(data->average_lon, display);
   display.println();
-  display.println((String)"SATS: "+data->average_satellites_visible+(String)" "+data->average_fix_type+(String)"D "  "RSSI: "+map(data->average_rssi,0,255,0,100)+(String)"%");
+  display.println((String)"SAT: "+data->average_satellites_visible+(String)" "+data->average_fix_type+(String)"D "  "RSSI: "+map(data->average_rssi,0,255,0,100)+(String)"%");
   display.println((String)"DR: "+data->average_drop_rate_comm/100+(String)"%  "  "ALT: "+data->average_relative_alt/1000+(String)"m");
 
   int rssi_alarm = map(data->rssi,0,255,0,100);
