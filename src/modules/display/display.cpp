@@ -2,6 +2,7 @@
 #include "../src/config.h"
 
 void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
+  display.println("   CURRENT DATA");
   display.clear();
   printL(data->lat, display); //gps
   display.print(" ");
@@ -9,6 +10,24 @@ void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
   display.println();
   display.println((String)"SATS: "+data->satellites_visible+(String)" "+data->fix_type+(String)"D "  "RSSI: "+map(data->rssi,0,255,0,100)+(String)"%");
   display.println((String)"DR: "+data->drop_rate_comm/100+(String)"%  "  "ALT: "+data->relative_alt/1000+(String)"m");
+
+  int rssi_alarm = map(data->rssi,0,255,0,100);
+      if(rssi_alarm <= 30){
+      digitalWrite(BUZZER_PIN, HIGH);
+      delay(500);
+      digitalWrite(BUZZER_PIN, LOW);
+      }
+}
+
+void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
+  display.clear();
+  display.println("   AVERAGE DATA");
+  printL(data->average_alt, display); //gps
+  display.print(" ");
+  printL(data->average_lon, display);
+  display.println();
+  display.println((String)"SATS: "+data->average_satellites_visible+(String)" "+data->average_fix_type+(String)"D "  "RSSI: "+map(data->average_rssi,0,255,0,100)+(String)"%");
+  display.println((String)"DR: "+data->average_drop_rate_comm/100+(String)"%  "  "ALT: "+data->average_relative_alt/1000+(String)"m");
 
   int rssi_alarm = map(data->rssi,0,255,0,100);
       if(rssi_alarm <= 30){
@@ -63,3 +82,10 @@ void display_calibration_message(SSD1306AsciiWire &display) {
   display.set1X();
   display.setFont(System5x7);
 }
+
+void display_no_data_message(telemetry_data *data, SSD1306AsciiWire &display){
+     display_wait_message(display);
+     delay(3000);
+     display_current_data(data, display);
+     delay(3000);
+  }

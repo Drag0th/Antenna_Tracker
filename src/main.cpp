@@ -21,12 +21,11 @@ Servo servo_motor;
 mavlink_message_t msg;
 mavlink_status_t status;
 //oth
-uint8_t flag, eeprom_flag = 0, calibration_flag = 0, message_switch = 0;
+uint8_t flag, calibration_flag = 0, message_switch = 0;
 uint32_t time_flag, calibration_time_flag, calibration_time_check;
 
 //DELETE
 void set_flag();
-void no_data();
 //------------------------------------------------------------------------------
 void setup() {
   Wire.begin();
@@ -139,13 +138,13 @@ void loop() {
           break;
         }
         default: {
-          #ifdef DEBUG
-          Serial.println(msg.msgid); //see unused packet types
-          #endif
         break;
         }
     }
     if(flag == 1) {
+
+      
+
       calibration_time_check = millis();
       if(calibration_flag == 0){
         if (calibration_time_check - calibration_time_flag >= 100UL) {
@@ -164,31 +163,26 @@ void loop() {
         display_current_data(&data_storage, oled_display);
     }
     else {
-      no_data();
+      if((millis() - time_flag) > MAV_TIMEOUT )
+        display_no_data_message(&data_storage, oled_display);
     }
    }
   }
-  no_data();
+  if((millis() - time_flag) > MAV_TIMEOUT ) 
+    display_no_data_message(&data_storage, oled_display);
   //
   if(digitalRead(BUTTION0_PIN) == HIGH)
-    calibration_flag = 1;
+    if(calibration_flag != 1){
+      calibration_flag = 1;
+    }
+    else{
+
+    }
   // 
 }
 
 void set_flag() {
     flag = 1;
-    eeprom_flag = 0;
     time_flag = millis();
 }
 
-void no_data() {
-  if((millis() - time_flag) > MAV_TIMEOUT ) { //no mavlink data at 2sec
-     #ifdef DEBUG
-     Serial.println((String)"LOST MAVLINK DATA");
-     #endif
-     display_wait_message(oled_display);
-     delay(3000);
-     display_current_data(&data_storage, oled_display);
-     delay(3000);
-  }
-} 

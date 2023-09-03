@@ -17,6 +17,7 @@ typedef struct{
     uint16_t vel;
     uint8_t rssi;
     // data buffers
+    uint8_t data_counter;
     int alt_buffer;
     int relative_alt_buffer;
     int hdg_buffer;
@@ -45,3 +46,5 @@ typedef struct{
     // postion/movement data
     uint16_t stepper_motor_postion;
 }telemetry_data;
+
+void summarize_data(telemetry_data *data);
