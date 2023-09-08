@@ -20,6 +20,7 @@ void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
 }
 
 void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
+  /*
   display.clear();
   display.println("    AVERAGE DATA");
   printL(data->average_lat, display); //gps
@@ -35,6 +36,11 @@ void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
       delay(500);
       digitalWrite(BUZZER_PIN, LOW);
       }
+  */
+  display.clear();
+  display.println((String)"O_LAT: " + convert_to_degrees(data->average_lat));
+  display.println((String)"CAL_AZ: " + calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon));
+  display.println((String)"M_LOGIC: " + stepper_motor_logic(calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon), data->stepper_motor_postion));
 }
 
 void printL(int32_t degE7, SSD1306AsciiWire &display) {
