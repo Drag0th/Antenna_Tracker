@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include "./modules/kinematics/kinematics.h"
 
 typedef struct{
     // data input
@@ -50,5 +51,5 @@ typedef struct{
 
 }telemetry_data;
 
-void process_data(telemetry_data *data);
+void process_data(telemetry_data *data, uint8_t calibration_flag, A4988 &stepper_motor, Servo &servo_motor);
 void set_tracker_postion(telemetry_data *data);

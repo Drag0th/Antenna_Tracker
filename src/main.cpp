@@ -144,9 +144,10 @@ void loop() {
     }
     if(flag == 1) {
 
-      process_data(&data_storage);
+      process_data(&data_storage, calibration_flag, stepper_motor, servo_motor);
 
       calibration_time_check = millis();
+
       if(calibration_flag == 0){
         if (calibration_time_check - calibration_time_flag >= 100UL) {
           calibration_time_flag = calibration_time_check;
