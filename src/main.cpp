@@ -4,7 +4,7 @@
 #include "config.h"
 #include "modules/display/display.h"
 #include "modules/kinematics/kinematics.h"
-#include "modules/data/data.h"
+#include "modules/data/data.h" 
 
 //MY VARIABLES
 telemetry_data data_storage;
@@ -162,10 +162,7 @@ void loop() {
         }
       }
       else
-        if(display_flag == 0)
-          display_current_data(&data_storage, oled_display);
-        else
-          display_average_data(&data_storage, oled_display);
+        display_data(display_flag, &data_storage, oled_display);
     }
     else {
       if((millis() - time_flag) > MAV_TIMEOUT )
@@ -183,10 +180,7 @@ void loop() {
       calibration_flag = 1;
     }
     else{
-      if(display_flag == 0)
-        display_flag = 1;
-      else 
-        display_flag = 0;
+      display_shift(display_flag);
     }
   }
   // 

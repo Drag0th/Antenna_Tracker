@@ -45,7 +45,7 @@ void process_data(telemetry_data *data, uint8_t calibration_flag, A4988 &stepper
 
         data->data_counter = 0;
 
-        if(calibration_flag == 1){
+        if(calibration_flag == 1 && !KINEMATICS_DEBUG){
             stepper_motor.rotate(stepper_motor_logic(calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon), data->stepper_motor_postion));
             delay(500);
             servo_motor.write(calculate_elevation_deg(data->average_lat, data->average_lon, data->average_relative_alt, data->tracker_lat, data->tracker_lon));

@@ -60,7 +60,7 @@ double calculate_azimuth_deg(int32_t object_lat, int32_t object_lon, int32_t tra
     object_lat_deg -= tracker_lat_deg;
     object_lon_deg -= tracker_lon_deg;
     
-    return(atan2(object_lat_deg,object_lon_deg)* (180 / PI));
+    return(atan2(object_lat_deg,object_lon_deg) * (180 / PI));
 
 };
 
@@ -74,10 +74,10 @@ double calculate_elevation_deg(int32_t object_lat, int32_t object_lon, int32_t o
     object_lat_deg -= tracker_lat_deg;
     object_lon_deg -= tracker_lon_deg;
 
-    double distane_tracker_object = (sqrt(pow(object_lat_deg, 2)+pow(object_lon_deg, 2)))*DEG_TO_KM_RATIO;
+    double distane_tracker_object = (sqrt(pow(object_lat_deg, 2)+pow(object_lon_deg, 2))) * DEG_TO_KM_RATIO;
     double distance_ground_object = ((object_alt/1000000) - TRIPOD_HEIGHT)/1000;
 
-    return(asin(distance_ground_object/distane_tracker_object));
+    return(asin(distance_ground_object/distane_tracker_object) * (180 / PI));
 };
 
 double convert_to_degrees(int32_t lat_or_lon ){

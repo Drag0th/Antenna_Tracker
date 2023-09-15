@@ -20,7 +20,7 @@ void display_current_data(telemetry_data *data, SSD1306AsciiWire &display) {
 }
 
 void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
-  /*
+  
   display.clear();
   display.println("    AVERAGE DATA");
   printL(data->average_lat, display); //gps
@@ -36,11 +36,7 @@ void display_average_data(telemetry_data *data, SSD1306AsciiWire &display) {
       delay(500);
       digitalWrite(BUZZER_PIN, LOW);
       }
-  */
-  display.clear();
-  display.println((String)"O_LAT: " + convert_to_degrees(data->average_lat));
-  display.println((String)"CAL_AZ: " + calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon));
-  display.println((String)"M_LOGIC: " + stepper_motor_logic(calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon), data->stepper_motor_postion));
+  
 }
 
 void printL(int32_t degE7, SSD1306AsciiWire &display) {
@@ -95,3 +91,56 @@ void display_no_data_message(telemetry_data *data, SSD1306AsciiWire &display){
      display_current_data(data, display);
      delay(3000);
   }
+
+void display_shift(uint8_t &flag){
+  switch(flag){
+    case 0:
+      flag = 1;
+    break;
+    case 1:
+      if(KINEMATICS_DEBUG){
+        flag = 2;
+      }
+      else
+        flag = 0;
+    break;
+    case 2:
+      flag = 3;
+    break;
+    case 3:
+      flag = 0;
+    break;
+  }
+};
+
+void display_data(uint8_t flag, telemetry_data *data, SSD1306AsciiWire &display){
+  switch(flag){
+    case 0:
+      display_current_data(data, display);
+    break;
+    case 1:
+      display_average_data(data, display);
+    break;
+    case 2:
+      display_azimuth_debug_data(data, display);
+    break;
+    case 3:
+      display_elevation_debug_data(data, display);
+    break;
+  }
+};
+
+void display_azimuth_debug_data(telemetry_data *data, SSD1306AsciiWire &display){
+  display.clear();
+  display.println(" AZIMUTH DEBUG DATA ");
+  display.println((String)"CONVERT RESULT: " + convert_to_degrees(data->average_lat));
+  display.println((String)"AZIMUTH DEG: " + calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon));
+  display.println((String)"MOTOR LOGIC: " + stepper_motor_logic(calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon), data->stepper_motor_postion));
+};
+
+void display_elevation_debug_data(telemetry_data *data, SSD1306AsciiWire &display){
+  display.clear();
+  display.println(" ELEVATION DEBUG DATA ");
+  display.println((String)"CONVERT RESULT: " + convert_to_degrees(data->average_lat));
+  display.println((String)"ELEVATION DEG: " + calculate_elevation_deg(data->average_lat, data->average_lon, data->average_relative_alt, data->tracker_lat, data->tracker_lon));
+};
