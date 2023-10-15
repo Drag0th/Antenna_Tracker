@@ -15,7 +15,6 @@ Servo servo_motor;
 
 #define I2C_ADDRESS 0x3C
 
-
 #define MAV_TIMEOUT 5000 //mavlink timeout
 #define SERIAL_SPEED 57600 //mavlink input baud, 4800 for qczek 2.10
 //#define DEBUG
@@ -60,14 +59,8 @@ void loop() {
         case MAVLINK_MSG_ID_GLOBAL_POSITION_INT: {
           mavlink_global_position_int_t packet;
           mavlink_msg_global_position_int_decode(&msg, &packet);
-          if(packet.hdg == 65535) 
-            packet.hdg = 0;
           if(data_storage.relative_alt != packet.relative_alt){ 
             data_storage.relative_alt = packet.relative_alt; 
-            set_flag(); 
-          }
-          if(data_storage.hdg != packet.hdg){
-            data_storage.hdg = packet.hdg; 
             set_flag(); 
           }
           break;
@@ -75,10 +68,6 @@ void loop() {
         case MAVLINK_MSG_ID_SYS_STATUS: {
           __mavlink_sys_status_t packet;
           mavlink_msg_sys_status_decode(&msg, &packet);
-          if(data_storage.cpu_load != packet.load){
-            data_storage.cpu_load = packet.load;
-            set_flag();
-          }
           if(data_storage.drop_rate_comm != packet.drop_rate_comm){
             data_storage.drop_rate_comm = packet.drop_rate_comm;
             set_flag();
@@ -118,14 +107,6 @@ void loop() {
           }
           if(data_storage.lon != packet.lon){
             data_storage.lon = packet.lon;
-            set_flag();
-          }
-          if(data_storage.vel != packet.vel){ 
-            data_storage.vel = packet.vel;
-            set_flag();
-          }
-          if(data_storage.cog != packet.cog){
-            data_storage.cog = packet.cog; 
             set_flag();
           }
           if(data_storage.fix_type != packet.fix_type){

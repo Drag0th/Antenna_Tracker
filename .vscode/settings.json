@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "*.piopm": "cpp"
+        "*.piopm": "cpp",
+        "cmath": "cpp"
     }
 }
