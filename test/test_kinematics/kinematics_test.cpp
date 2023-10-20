@@ -35,12 +35,22 @@ void calculate_azimuth_deg_test(){
     TEST_ASSERT_EQUAL_DOUBLE(expected, acutal);
 }
 
+void stepper_motor_logic_test(){
+    double current_postion, destination, acutal, expected;
+    current_postion = 170.345678;
+    destination = 190.567657;
+    expected = 20.221979;
+    acutal = stepper_motor_logic(destination, current_postion);
+    TEST_ASSERT_EQUAL_DOUBLE(expected, acutal);
+}
+
 int main(int argc, char **argv){
 
     UNITY_BEGIN();
     RUN_TEST(convert_to_degrees_test);
     RUN_TEST(calculate_elevation_deg_test);
     RUN_TEST(calculate_azimuth_deg_test);
+    RUN_TEST(stepper_motor_logic_test);
     UNITY_END();
 
     return 0;

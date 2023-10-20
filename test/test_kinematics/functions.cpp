@@ -6,30 +6,30 @@ double convert_to_degrees(int32_t lat_or_lon ){
     return((double)lat_or_lon / (double)10000000);
 };
 
-float stepper_motor_logic(float input_degrees, uint16_t &current_postion){
+double stepper_motor_logic(double input_degrees, double current_postion){
 
-    float return_buffer;
+    double return_buffer;
 
     if(current_postion > input_degrees){
-        if(input_degrees > 180){
-            return_buffer = current_postion - input_degrees;
+        if((current_postion - input_degrees) < 180){
+            return_buffer = input_degrees - current_postion;
             current_postion = input_degrees;
             return return_buffer;
         }
         else{
-            return_buffer = ((360 - current_postion) + input_degrees);
+            return_buffer = (360 - current_postion) + input_degrees;
             current_postion = input_degrees;
             return return_buffer;
         }
     }
     else if(current_postion < input_degrees){
-        if((input_degrees - current_postion) > 180){
-            return_buffer = (-180 + ((input_degrees - current_postion) - 180));
+        if((input_degrees - current_postion) < 180){
+            return_buffer = input_degrees - current_postion;
             current_postion = input_degrees;
             return return_buffer;
         }
         else{
-            return_buffer = input_degrees - current_postion;
+            return_buffer = (input_degrees - 360) - current_postion;
             current_postion = input_degrees;
             return return_buffer;
         }
