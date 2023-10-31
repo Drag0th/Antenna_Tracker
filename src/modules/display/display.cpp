@@ -121,26 +121,6 @@ void display_data(uint8_t flag, telemetry_data *data, SSD1306AsciiWire &display)
     case 1:
       display_average_data(data, display);
     break;
-    case 2:
-      display_azimuth_debug_data(data, display);
-    break;
-    case 3:
-      display_elevation_debug_data(data, display);
-    break;
   }
 };
 
-void display_azimuth_debug_data(telemetry_data *data, SSD1306AsciiWire &display){
-  display.clear();
-  display.println(" AZIMUTH DEBUG DATA ");
-  display.println((String)"CONVERT RESULT: " + convert_to_degrees(data->average_lat));
-  display.println((String)"AZIMUTH DEG: " + calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon));
-  display.println((String)"MOTOR LOGIC: " + stepper_motor_logic(calculate_azimuth_deg(data->average_lat, data->average_lon, data->tracker_lat, data->tracker_lon), data->stepper_motor_postion));
-};
-
-void display_elevation_debug_data(telemetry_data *data, SSD1306AsciiWire &display){
-  display.clear();
-  display.println(" ELEVATION DEBUG DATA ");
-  display.println((String)"CONVERT RESULT: " + convert_to_degrees(data->average_lat));
-  display.println((String)"ELEVATION DEG: " + calculate_elevation_deg(data->average_lat, data->average_lon, data->average_relative_alt, data->tracker_lat, data->tracker_lon));
-};
